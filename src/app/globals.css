@@ -1,0 +1,225 @@
+/* ============================================================
+   SYMPHONY OF NIGHT — Global Design System
+   ============================================================ */
+
+/* ---------- Google Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,900;1,6..96,400&family=Manrope:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Marcellus+SC&display=swap');
+
+/* ---------- Custom Font: Symphony Pro (Wordmark) ---------- */
+@font-face {
+  font-family: 'SymphonyPro';
+  src: url('/Context/fontes/symphony-pro.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Design Tokens ---------- */
+:root {
+  /* === Cores === */
+  --color-gotham-black:    #0A0A0D;
+  --color-deep-wine:       #1C0E14;
+  --color-marquise-red:    #B3122A;
+  --color-brass-gold:      #C9A24B;
+  --color-midnight-purple: #2E1A3D;
+  --color-veiled-ivory:    #E7E0D2;
+
+  /* Aliases semânticos */
+  --bg-base:      var(--color-gotham-black);
+  --bg-elevated:  var(--color-deep-wine);
+  --accent:       var(--color-marquise-red);
+  --gold:         var(--color-brass-gold);
+  --atmosphere:   var(--color-midnight-purple);
+  --text-primary: var(--color-veiled-ivory);
+  --text-muted:   rgba(231, 224, 210, 0.55);
+  --text-gold:    var(--color-brass-gold);
+
+  /* === Tipografia === */
+  --font-wordmark: 'SymphonyPro', cursive;
+  --font-display:  'Bodoni Moda', Georgia, serif;
+  --font-seal:     'Marcellus SC', serif;
+  --font-body:     'Manrope', system-ui, sans-serif;
+  --font-mono:     'Space Mono', 'Courier New', monospace;
+
+  /* === Escala tipográfica === */
+  --text-xs:   0.75rem;
+  --text-sm:   0.8125rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+  --text-3xl:  2.25rem;
+  --text-4xl:  3rem;
+  --text-5xl:  4.5rem;
+  --text-6xl:  6rem;
+
+  /* === Espaçamento === */
+  --space-1:   0.25rem;
+  --space-2:   0.5rem;
+  --space-3:   0.75rem;
+  --space-4:   1rem;
+  --space-6:   1.5rem;
+  --space-8:   2rem;
+  --space-10:  2.5rem;
+  --space-12:  3rem;
+  --space-16:  4rem;
+  --space-20:  5rem;
+  --space-24:  6rem;
+  --space-32:  8rem;
+
+  /* === Bordas & Raios === */
+  --radius-sm:  2px;
+  --radius-md:  4px;
+  --radius-lg:  8px;
+  --border-gold: 1px solid var(--color-brass-gold);
+  --border-subtle: 1px solid rgba(201, 162, 75, 0.25);
+
+  /* === Sombras === */
+  --shadow-gold:  0 0 20px rgba(201, 162, 75, 0.15), 0 0 60px rgba(201, 162, 75, 0.05);
+  --shadow-card:  0 4px 32px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(201, 162, 75, 0.1);
+  --shadow-red:   0 0 30px rgba(179, 18, 42, 0.3);
+
+  /* === Transições === */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   450ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* === Z-Index === */
+  --z-base:    1;
+  --z-overlay: 10;
+  --z-header:  100;
+  --z-loader:  1000;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--text-primary);
+}
+
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-2xl); }
+
+p {
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--text-gold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover { color: var(--color-veiled-ivory); }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-gotham-black); }
+::-webkit-scrollbar-thumb { background: var(--color-brass-gold); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-marquise-red); }
+
+/* ---------- Seleção ---------- */
+::selection {
+  background: var(--color-marquise-red);
+  color: var(--color-veiled-ivory);
+}
+
+/* ---------- Utilitários ---------- */
+.font-wordmark { font-family: var(--font-wordmark); }
+.font-display  { font-family: var(--font-display); }
+.font-seal     { font-family: var(--font-seal); }
+.font-mono     { font-family: var(--font-mono); }
+.text-gold     { color: var(--color-brass-gold); }
+.text-accent   { color: var(--color-marquise-red); }
+.text-muted    { color: var(--text-muted); }
+
+.border-gold-bottom { border-bottom: var(--border-gold); }
+.border-gold-top    { border-top: var(--border-gold); }
+
+/* ---------- Gradientes ---------- */
+.gradient-hero {
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 10, 13, 0.3) 0%,
+    rgba(46, 26, 61, 0.5) 40%,
+    rgba(28, 14, 20, 0.85) 80%,
+    var(--color-gotham-black) 100%
+  );
+}
+
+/* ---------- Container ---------- */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+@media (min-width: 1024px) {
+  .container { padding-inline: var(--space-12); }
+}
+
+/* ---------- Section base ---------- */
+.section { padding-block: var(--space-24); }
+
+/* ---------- Gold Divider ---------- */
+.gold-line {
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: var(--color-brass-gold);
+  margin: var(--space-6) auto;
+}
+
+/* ---------- Badge Seal ---------- */
+.badge-seal {
+  font-family: var(--font-seal);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  color: var(--color-brass-gold);
+  text-transform: uppercase;
+}
+
+/* ---------- Animações ---------- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 162, 75, 0); }
+  50%       { box-shadow: 0 0 20px 4px rgba(201, 162, 75, 0.2); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+img { max-width: 100%; height: auto; display: block; }
