@@ -9,6 +9,7 @@ import { CustomCursor } from "@/components/ui/CustomCursor";
 import { CartDrawer } from "@/components/ui/CartDrawer";
 import { Preloader } from "@/components/ui/Preloader";
 import { AudioPlayer } from "@/components/ui/AudioPlayer";
+import { AtomWidget } from "@/components/ui/AtomWidget";
 
 const bodoniModa = Bodoni_Moda({
   variable: "--font-bodoni",
@@ -40,9 +41,8 @@ const marcellusSC = Marcellus_SC({
 });
 
 export const metadata: Metadata = {
-  title: "Symphony of Night — Mecanismos Raros",
-  description:
-    "Peças autorais em edição limitada — relógios, autômatos e objetos cinéticos, feitos à mão no Ateliê Sanchez.",
+  title: "Symphony of Night — Ateliê Sanchez",
+  description: "Mecanismos raros para quem coleciona silêncio e precisão. Autômatos, relógios e caixas de música exclusivas.",
   keywords: ["autômatos", "relógios", "colecionáveis", "art déco", "peças cinéticas"],
 };
 
@@ -63,6 +63,7 @@ export default function RootLayout({
           <CustomCursor />
           <CartDrawer />
           <AudioPlayer />
+          <AtomWidget />
           {children}
           <ScrollClock />
         </SmoothScrollProvider>
