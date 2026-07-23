@@ -36,7 +36,7 @@ export function ProductCarousel({ products }: { products: CarouselProduct[] }) {
   }, []);
 
   return (
-    <div 
+    <motion.div 
       ref={carouselRef} 
       style={{ 
         width: "100%", 
@@ -46,7 +46,6 @@ export function ProductCarousel({ products }: { products: CarouselProduct[] }) {
         cursor: "grab",
       }}
       whileTap={{ cursor: "grabbing" }}
-      as={motion.div}
     >
       <motion.div 
         drag="x" 
@@ -158,6 +157,6 @@ export function ProductCarousel({ products }: { products: CarouselProduct[] }) {
             );
           })}
         </motion.div>
-    </div>
+    </motion.div>
   );
 }
