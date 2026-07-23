@@ -43,12 +43,27 @@ export function Footer() {
   return (
     <footer
       style={{
-        background: 'var(--color-deep-wine)',
-        borderTop: '1px solid rgba(201, 162, 75, 0.2)',
+        background: 'var(--color-gotham-black)',
+        borderTop: '1px solid rgba(201, 162, 75, 0.18)',
         paddingTop: 'var(--space-16)',
         paddingBottom: 'var(--space-8)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Top ambient gold line */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '20%',
+          right: '20%',
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, rgba(201,162,75,0.4), transparent)',
+        }}
+      />
+
       <div
         style={{
           maxWidth: '1280px',
@@ -75,13 +90,14 @@ export function Footer() {
                   color: 'var(--color-brass-gold)',
                   textTransform: 'uppercase',
                   marginBottom: 'var(--space-4)',
+                  opacity: 0.85,
                 }}
               >
                 {col.title}
               </h4>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                 {col.links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.href + link.label}>
                     <Link
                       href={link.href}
                       style={{
@@ -108,7 +124,7 @@ export function Footer() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: 'var(--space-4)',
-            borderTop: '1px solid rgba(201, 162, 75, 0.15)',
+            borderTop: '1px solid rgba(201, 162, 75, 0.12)',
             paddingTop: 'var(--space-10)',
             marginBottom: 'var(--space-6)',
           }}
@@ -123,7 +139,6 @@ export function Footer() {
           >
             <circle cx="24" cy="24" r="21" stroke="#C9A24B" strokeWidth="1" strokeOpacity="0.5" />
             <circle cx="24" cy="24" r="17" stroke="#C9A24B" strokeWidth="0.5" strokeOpacity="0.2" />
-            {/* Marcações */}
             {Array.from({ length: 12 }).map((_, i) => {
               const angle = (i * 30 * Math.PI) / 180;
               const r1 = i % 3 === 0 ? 16 : 18;
@@ -141,7 +156,6 @@ export function Footer() {
                 />
               );
             })}
-            {/* Ponteiros — meia-noite */}
             <line x1="24" y1="24" x2="24" y2="8" stroke="#C9A24B" strokeWidth="1.5" strokeLinecap="round" />
             <line x1="24" y1="24" x2="24" y2="5" stroke="#C9A24B" strokeWidth="1" strokeLinecap="round" />
             <circle cx="24" cy="24" r="1.5" fill="#C9A24B" />
@@ -150,9 +164,10 @@ export function Footer() {
           <span
             style={{
               fontFamily: 'var(--font-wordmark)',
-              fontSize: '1.5rem',
+              fontSize: '1.6rem',
               color: 'var(--color-veiled-ivory)',
-              opacity: 0.7,
+              opacity: 0.85,
+              textShadow: '0 0 20px rgba(201,162,75,0.15)',
             }}
           >
             Symphony of Night
@@ -162,13 +177,13 @@ export function Footer() {
             style={{
               fontFamily: 'var(--font-seal)',
               fontSize: 'var(--text-xs)',
-              letterSpacing: '0.2em',
+              letterSpacing: '0.22em',
               color: 'var(--color-brass-gold)',
-              opacity: 0.5,
+              opacity: 0.6,
               textTransform: 'uppercase',
             }}
           >
-            Ateliê Sanchez
+            Ateliê Sanchez · Est. 2020
           </span>
         </div>
 
@@ -177,9 +192,9 @@ export function Footer() {
           style={{
             textAlign: 'center',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.625rem',
+            fontSize: '0.6rem',
             color: 'var(--text-muted)',
-            letterSpacing: '0.1em',
+            letterSpacing: '0.12em',
             opacity: 0.5,
           }}
         >

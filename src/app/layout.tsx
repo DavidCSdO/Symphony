@@ -6,6 +6,9 @@ import { ScrollClock } from "@/components/ui/ScrollClock";
 import { AudioProvider } from "@/components/providers/AudioProvider";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import { CartDrawer } from "@/components/ui/CartDrawer";
+import { Preloader } from "@/components/ui/Preloader";
+import { AudioPlayer } from "@/components/ui/AudioPlayer";
 
 const bodoniModa = Bodoni_Moda({
   variable: "--font-bodoni",
@@ -56,7 +59,10 @@ export default function RootLayout({
       <body>
         <SmoothScrollProvider>
           <AudioProvider />
+          <Preloader />
           <CustomCursor />
+          <CartDrawer />
+          <AudioPlayer />
           {children}
           <ScrollClock />
         </SmoothScrollProvider>

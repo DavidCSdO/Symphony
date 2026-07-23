@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
-  const [cursorState, setCursorState] = useState<'default' | 'loupe' | 'hidden'>('default');
+  const [cursorState, setCursorState] = useState<'default' | 'loupe' | 'hidden' | 'hover'>('default');
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -28,8 +28,8 @@ export function CustomCursor() {
       if (isLoupe) {
         setCursorState('loupe');
       } else if (isInteractive) {
-        setCursorState('hidden'); // Usa pointer padrão do navegador ou outro estado
-        document.body.style.cursor = 'pointer';
+        setCursorState('hover');
+        document.body.style.cursor = 'none'; // Keep native cursor hidden
       } else {
         setCursorState('default');
         document.body.style.cursor = 'none';
@@ -70,6 +70,15 @@ export function CustomCursor() {
       backgroundColor: 'rgba(10,10,13,0.1)',
       backdropFilter: 'blur(2px)',
     },
+    hover: {
+      width: 48,
+      height: 48,
+      x: mousePosition.x - 24,
+      y: mousePosition.y - 24,
+      opacity: 1,
+      border: '1px solid rgba(201,162,75,0.4)',
+      backgroundColor: 'rgba(201,162,75,0.05)',
+    },
     hidden: {
       opacity: 0,
       width: 12,
@@ -88,7 +97,7 @@ export function CustomCursor() {
           left: 0,
           borderRadius: '50%',
           pointerEvents: 'none',
-          zIndex: 9999,
+          zIndex: 999999,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -121,8 +130,9 @@ export function CustomCursor() {
       
       {/* Esconde cursor nativo globalmente quando não for pointer */}
       <style>{`
-        body { cursor: none; }
-        a, button, [role="button"], input { cursor: pointer; }
+        @media (pointer: fine) {
+          body, a, button, [role="button"], input { cursor: none !important; }
+        }
       `}</style>
     </>
   );

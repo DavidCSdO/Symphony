@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, PresentationControls, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
@@ -26,8 +26,7 @@ function Gear({
   });
 
   // Geometria da engrenagem com dentes projetados
-  const gearShape = useRef<THREE.Shape | null>(null);
-  if (!gearShape.current) {
+  const gearShape = useMemo(() => {
     const shape = new THREE.Shape();
     const toothAngle = (Math.PI * 2) / teeth;
     const toothWidth = toothAngle * 0.35;
@@ -54,22 +53,22 @@ function Gear({
     holePath.absarc(0, 0, radius * 0.3, 0, Math.PI * 2, true);
     shape.holes.push(holePath);
 
-    gearShape.current = shape;
-  }
+    return shape;
+  }, [radius, teeth]);
 
-  const extrudeSettings = {
+  const extrudeSettings = useMemo(() => ({
     depth,
     bevelEnabled: true,
     bevelSegments: 3,
     steps: 1,
     bevelSize: 0.03,
     bevelThickness: 0.03,
-  };
+  }), [depth]);
 
   return (
     <group ref={meshRef} position={position} rotation={rotation}>
       <mesh castShadow receiveShadow>
-        <extrudeGeometry args={[gearShape.current, extrudeSettings]} />
+        <extrudeGeometry args={[gearShape, extrudeSettings]} />
         <meshStandardMaterial
           color={color}
           metalness={0.92}
@@ -77,8 +76,8 @@ function Gear({
           envMapIntensity={1.5}
         />
       </mesh>
-      {/* Eixo central em aço escuro */}
-      <mesh position={[0, 0, depth / 2]}>
+      {/* Eixo central em aço escuro — rotated so cylinder is perpendicular to gear face */}
+      <mesh position={[0, 0, depth / 2]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[radius * 0.28, radius * 0.28, depth * 1.5, 32]} />
         <meshStandardMaterial color="#1A1A22" metalness={0.95} roughness={0.15} />
       </mesh>
@@ -132,8 +131,8 @@ function BalanceWheel({ position = [0, 0, 0] as [number, number, number] }) {
 function WatchMechanism() {
   return (
     <group position={[0, 0, 0]} rotation={[0.3, -0.2, 0]}>
-      {/* Placa base traseira com textura marquinha escura */}
-      <mesh position={[0, 0, -0.4]} receiveShadow>
+      {/* Placa base traseira — cylinderGeometry needs X rotation for face-on view */}
+      <mesh position={[0, 0, -0.4]} rotation={[Math.PI / 2, 0, 0]} receiveShadow>
         <cylinderGeometry args={[3.2, 3.2, 0.2, 64]} />
         <meshStandardMaterial color="#120B10" metalness={0.8} roughness={0.4} />
       </mesh>

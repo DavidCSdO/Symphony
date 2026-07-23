@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { SectionDivider } from '@/components/ui/SectionDivider';
+import { Quote } from 'lucide-react';
 
 const reviews = [
   {
@@ -31,7 +33,6 @@ const reviews = [
 function DecoStar({ filled = true }: { filled?: boolean }) {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      {/* Estrela de 4 pontas — estilo art déco */}
       <path
         d="M7 1L8.2 5.8H13L9.4 8.6L10.6 13L7 10.2L3.4 13L4.6 8.6L1 5.8H5.8L7 1Z"
         fill={filled ? '#C9A24B' : 'none'}
@@ -43,53 +44,63 @@ function DecoStar({ filled = true }: { filled?: boolean }) {
 }
 
 function ReviewCard({ review, index }: { review: typeof reviews[0]; index: number }) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <motion.article
       id={`review-${review.id}`}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
-        background: 'var(--color-deep-wine)',
-        border: '1px solid rgba(201,162,75,0.2)',
-        borderRadius: 'var(--radius-md)',
+        background: hovered
+          ? 'rgba(28,14,20,0.7)'
+          : 'rgba(28,14,20,0.4)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: hovered
+          ? '1px solid rgba(201,162,75,0.35)'
+          : '1px solid rgba(201,162,75,0.12)',
+        borderRadius: 'var(--radius-lg)',
         padding: '2rem',
         position: 'relative',
         overflow: 'hidden',
+        transition: 'all 350ms cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        boxShadow: hovered
+          ? '0 0 25px rgba(201,162,75,0.08), 0 20px 40px rgba(10,10,13,0.5)'
+          : '0 4px 20px rgba(10,10,13,0.3)',
       }}
     >
-      {/* Cantos déco */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '0.75rem',
-          left: '0.75rem',
-          width: '16px',
-          height: '16px',
-          borderTop: '1px solid rgba(201,162,75,0.4)',
-          borderLeft: '1px solid rgba(201,162,75,0.4)',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '0.75rem',
-          right: '0.75rem',
-          width: '16px',
-          height: '16px',
-          borderBottom: '1px solid rgba(201,162,75,0.4)',
-          borderRight: '1px solid rgba(201,162,75,0.4)',
-        }}
-      />
+      {/* Corner decorations */}
+      <div style={{
+        position: 'absolute', top: '0.75rem', left: '0.75rem',
+        width: '16px', height: '16px',
+        borderTop: '1px solid rgba(201,162,75,0.3)',
+        borderLeft: '1px solid rgba(201,162,75,0.3)',
+        transition: 'border-color 300ms ease',
+        ...(hovered ? { borderColor: 'rgba(201,162,75,0.6)' } : {}),
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '0.75rem', right: '0.75rem',
+        width: '16px', height: '16px',
+        borderBottom: '1px solid rgba(201,162,75,0.3)',
+        borderRight: '1px solid rgba(201,162,75,0.3)',
+        transition: 'border-color 300ms ease',
+        ...(hovered ? { borderColor: 'rgba(201,162,75,0.6)' } : {}),
+      }} />
 
-      {/* Estrelas */}
+      {/* Quote icon */}
+      <div style={{ marginBottom: '1rem', opacity: 0.3 }}>
+        <Quote size={24} color="#C9A24B" />
+      </div>
+
+      {/* Stars */}
       <div
-        style={{
-          display: 'flex',
-          gap: '0.25rem',
-          marginBottom: '1rem',
-        }}
+        style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem' }}
         aria-label={`${review.rating} de 5 estrelas`}
       >
         {Array.from({ length: 5 }).map((_, i) => (
@@ -97,38 +108,25 @@ function ReviewCard({ review, index }: { review: typeof reviews[0]; index: numbe
         ))}
       </div>
 
-      {/* Citação */}
+      {/* Quote text */}
       <blockquote
         style={{
           fontFamily: 'var(--font-display)',
           fontStyle: 'italic',
-          fontSize: '1rem',
+          fontSize: '1.05rem',
           color: 'var(--color-veiled-ivory)',
-          lineHeight: 1.6,
+          lineHeight: 1.65,
           marginBottom: '1.5rem',
           position: 'relative',
         }}
       >
-        <span
-          style={{
-            fontFamily: 'Georgia, serif',
-            fontSize: '3rem',
-            color: 'var(--color-brass-gold)',
-            opacity: 0.3,
-            lineHeight: 0,
-            verticalAlign: '-0.5em',
-            marginRight: '0.25rem',
-          }}
-        >
-          "
-        </span>
         {review.quote}
       </blockquote>
 
-      {/* Fonte */}
+      {/* Source */}
       <footer
         style={{
-          borderTop: '1px solid rgba(201,162,75,0.15)',
+          borderTop: '1px solid rgba(201,162,75,0.1)',
           paddingTop: '0.75rem',
           display: 'flex',
           alignItems: 'center',
@@ -140,17 +138,17 @@ function ReviewCard({ review, index }: { review: typeof reviews[0]; index: numbe
             display: 'block',
             width: '24px',
             height: '1px',
-            background: 'var(--color-brass-gold)',
-            opacity: 0.5,
+            background: 'linear-gradient(to right, var(--color-brass-gold), transparent)',
+            opacity: 0.6,
           }}
         />
         <cite
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.65rem',
+            fontSize: '0.6rem',
             color: 'var(--color-brass-gold)',
             fontStyle: 'normal',
-            letterSpacing: '0.12em',
+            letterSpacing: '0.15em',
             textTransform: 'uppercase',
           }}
         >
@@ -169,9 +167,19 @@ export function ReviewsSection() {
       style={{
         padding: 'var(--space-24) var(--space-6)',
         background: 'var(--color-gotham-black)',
+        position: 'relative',
       }}
     >
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+      {/* Subtle glow */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '500px', height: '300px',
+        background: 'radial-gradient(circle, rgba(201,162,75,0.03) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative' }}>
         <SectionDivider />
 
         <motion.div
@@ -181,18 +189,21 @@ export function ReviewsSection() {
           transition={{ duration: 0.6 }}
           style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}
         >
-          <p
+          <motion.p
+            initial={{ opacity: 0, letterSpacing: '0.5em' }}
+            whileInView={{ opacity: 1, letterSpacing: '0.22em' }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
             style={{
               fontFamily: 'var(--font-seal)',
               fontSize: '0.7rem',
-              letterSpacing: '0.22em',
               color: 'var(--color-brass-gold)',
               textTransform: 'uppercase',
               marginBottom: '0.75rem',
             }}
           >
             Ato V
-          </p>
+          </motion.p>
           <h2
             id="reviews-heading"
             style={{
@@ -202,10 +213,18 @@ export function ReviewsSection() {
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               color: 'var(--color-veiled-ivory)',
+              marginBottom: '0.5rem',
             }}
           >
             Críticas
           </h2>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ width: '48px', height: '1px', background: 'var(--color-brass-gold)', margin: '0 auto', transformOrigin: 'center' }}
+          />
         </motion.div>
 
         <div

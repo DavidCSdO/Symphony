@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Button } from '@/components/ui/Button';
+import { ArrowRight, Sparkles, Eye } from 'lucide-react';
 
 const CATEGORIES_DATA: Record<string, {
   name: string;
@@ -124,34 +125,41 @@ export default function CategoryCollectionPage() {
   const params = useParams();
   const slug = (params?.slug as string) || 'automatos';
   const category = CATEGORIES_DATA[slug] || CATEGORIES_DATA['automatos'];
-
   const categoryKeys = Object.keys(CATEGORIES_DATA);
 
   return (
-    <div style={{ background: 'var(--color-gotham-black)', minHeight: '100vh', color: 'var(--color-veiled-ivory)' }}>
+    <div style={{ background: 'var(--color-gotham-black)', minHeight: '100vh', color: 'var(--color-veiled-ivory)', position: 'relative' }}>
       <Header />
 
-      <main style={{ paddingTop: '120px', paddingBottom: '100px', maxWidth: '1280px', margin: '0 auto', paddingInline: '1.5rem' }}>
+      {/* Atmosphere background */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)',
+        width: '800px', height: '500px',
+        background: 'radial-gradient(circle, rgba(46,26,61,0.2) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <main style={{ paddingTop: '130px', paddingBottom: '100px', maxWidth: '1280px', margin: '0 auto', paddingInline: '1.5rem', position: 'relative' }}>
         {/* Cabeçalho da Coleção */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          style={{ textAlign: 'center', marginBottom: '3rem' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          style={{ textAlign: 'center', marginBottom: '2.5rem' }}
         >
           <p style={{ fontFamily: 'var(--font-seal)', fontSize: '0.7rem', letterSpacing: '0.22em', color: 'var(--color-brass-gold)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
             COLEÇÃO AUTORAL · ATELIÊ SANCHEZ
           </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, textTransform: 'uppercase', color: 'var(--color-veiled-ivory)', marginBottom: '1rem' }}>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 900, textTransform: 'uppercase', color: 'var(--color-veiled-ivory)', marginBottom: '1rem', letterSpacing: '0.04em' }}>
             {category.name}
           </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
+          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1.05rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.7 }}>
             {category.subtitle}
           </p>
         </motion.div>
 
         {/* Abas de Navegação por Categorias */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '4rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '3.5rem' }}>
           {categoryKeys.map((catKey) => {
             const isSelected = catKey === slug;
             const catInfo = CATEGORIES_DATA[catKey];
@@ -160,16 +168,19 @@ export default function CategoryCollectionPage() {
                 key={catKey}
                 href={`/colecao/${catKey}`}
                 style={{
-                  padding: '0.5rem 1.25rem',
+                  padding: '0.55rem 1.35rem',
                   borderRadius: 'var(--radius-sm)',
-                  background: isSelected ? 'var(--color-brass-gold)' : 'rgba(28,14,20,0.6)',
+                  background: isSelected ? 'var(--color-brass-gold)' : 'rgba(28,14,20,0.5)',
+                  backdropFilter: 'blur(8px)',
                   color: isSelected ? '#0A0A0D' : 'var(--color-veiled-ivory)',
-                  border: isSelected ? '1px solid #C9A24B' : '1px solid rgba(201,162,75,0.2)',
+                  border: isSelected ? '1px solid #C9A24B' : '1px solid rgba(201,162,75,0.18)',
                   fontFamily: 'var(--font-mono)',
                   fontSize: '0.75rem',
                   fontWeight: isSelected ? 700 : 400,
+                  letterSpacing: '0.08em',
                   textDecoration: 'none',
                   transition: 'all 250ms ease',
+                  boxShadow: isSelected ? '0 0 20px rgba(201,162,75,0.2)' : 'none',
                 }}
               >
                 {catInfo.name.split(' ')[0]}
@@ -181,56 +192,67 @@ export default function CategoryCollectionPage() {
         <SectionDivider />
 
         {/* Grid de Produtos da Categoria */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginTop: '3rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem', marginTop: '3.5rem' }}>
           {category.items.map((item, index) => (
             <motion.article
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                background: 'var(--color-deep-wine)',
-                border: '1px solid rgba(201,162,75,0.25)',
-                borderRadius: 'var(--radius-md)',
+                background: 'rgba(28,14,20,0.5)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(201,162,75,0.2)',
+                borderRadius: 'var(--radius-lg)',
                 padding: '2rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                boxShadow: '0 20px 40px rgba(10,10,13,0.8)',
+                boxShadow: '0 20px 50px rgba(10,10,13,0.7)',
+                transition: 'all 300ms ease',
               }}
             >
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--color-brass-gold)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--color-brass-gold)', letterSpacing: '0.12em', opacity: 0.7 }}>
                     {item.sku}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', background: 'rgba(10,10,13,0.8)', padding: '0.2rem 0.5rem', border: '1px solid rgba(201,162,75,0.3)', borderRadius: 'var(--radius-sm)', color: 'var(--color-brass-gold)' }}>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
+                    background: 'rgba(10,10,13,0.8)',
+                    padding: '0.25rem 0.6rem',
+                    border: '1px solid rgba(201,162,75,0.3)',
+                    borderRadius: 'var(--radius-sm)',
+                    color: 'var(--color-brass-gold)',
+                    letterSpacing: '0.08em',
+                  }}>
                     {item.edition}
                   </span>
                 </div>
 
-                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-veiled-ivory)', marginBottom: '0.75rem' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-veiled-ivory)', marginBottom: '0.75rem', lineHeight: 1.25 }}>
                   {item.name}
                 </h2>
 
-                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 1.65, marginBottom: '1.5rem' }}>
                   {item.description}
                 </p>
 
-                <div style={{ borderTop: '1px solid rgba(201,162,75,0.15)', paddingTop: '1rem', marginBottom: '1.5rem' }}>
-                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)', lineHeight: 1.8 }}>
-                    <strong>Materiais:</strong> {item.materials}<br />
-                    <strong>Mecanismo:</strong> {item.mechanism}
+                <div style={{ borderTop: '1px solid rgba(201,162,75,0.12)', paddingTop: '1rem', marginBottom: '1.5rem' }}>
+                  <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-muted)', lineHeight: 1.85 }}>
+                    <strong style={{ color: 'var(--color-brass-gold)' }}>Materiais:</strong> {item.materials}<br />
+                    <strong style={{ color: 'var(--color-brass-gold)' }}>Mecanismo:</strong> {item.mechanism}
                   </p>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(201,162,75,0.2)', paddingTop: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(201,162,75,0.15)', paddingTop: '1.25rem' }}>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-veiled-ivory)' }}>
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price)}
                 </span>
 
-                <Link href={`/produto/${item.id}`}>
+                <Link href={`/produto/${item.id}`} style={{ textDecoration: 'none' }}>
                   <Button variant="gold" size="sm">
                     Ver Detalhes
                   </Button>
