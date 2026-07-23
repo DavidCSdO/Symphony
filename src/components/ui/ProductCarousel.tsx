@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export type CarouselProduct = {
@@ -16,38 +16,45 @@ export type CarouselProduct = {
 };
 
 export function ProductCarousel({ products }: { products: CarouselProduct[] }) {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-  });
-
-  // Calculate dynamic rotations or use predefined ones
-  const [windowWidth, setWindowWidth] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    const handleResize = () => setWindowWidth(window.innerWidth);
+    if (carouselRef.current) {
+      // The total width the inner track can scroll is the track's scrollWidth minus the container's clientWidth.
+      setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
+    }
+    
+    const handleResize = () => {
+      if (carouselRef.current) {
+        setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth);
+      }
+    };
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-100%"]);
-
   return (
-    <div ref={targetRef} style={{ height: "300vh", position: "relative" }}>
-      <div style={{
-        position: "sticky",
-        top: 0,
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        overflow: "hidden",
+    <div 
+      ref={carouselRef} 
+      style={{ 
+        width: "100%", 
+        overflow: "hidden", 
         background: "var(--color-gotham-black)",
-      }}>
-        <motion.div style={{ x, display: "flex", gap: "4rem", padding: "0 10vw" }}>
-          {products.map((product, index) => {
-            // Give each card a slight random-looking rotation if not provided
-            const rotate = product.rotation || (index % 2 === 0 ? -3 : 2);
+        padding: "4rem 0",
+        cursor: "grab",
+      }}
+      whileTap={{ cursor: "grabbing" }}
+      as={motion.div}
+    >
+      <motion.div 
+        drag="x" 
+        dragConstraints={{ right: 0, left: -width }}
+        style={{ display: "flex", gap: "4rem", padding: "0 10vw", width: "max-content" }}
+      >
+        {products.map((product, index) => {
+          const rotate = product.rotation || (index % 2 === 0 ? -3 : 2);
             
             return (
               <motion.div 
@@ -151,7 +158,6 @@ export function ProductCarousel({ products }: { products: CarouselProduct[] }) {
             );
           })}
         </motion.div>
-      </div>
     </div>
   );
 }
