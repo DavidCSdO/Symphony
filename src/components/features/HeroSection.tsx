@@ -15,7 +15,7 @@ import { Settings } from 'lucide-react';
 function FloatingGear({ size, top, left, right, scrollY, speed }: any) {
   const rotation = useTransform(scrollY, [0, 1000], [0, 360 * speed]);
   const yOffset = useTransform(scrollY, [0, 1000], [0, -150 * speed]);
-  
+
   return (
     <motion.div
       style={{
@@ -134,7 +134,7 @@ export function HeroSection() {
   const emblemRef = useRef<HTMLDivElement>(null);
   const moonBlockRef = useRef<HTMLDivElement>(null);
   const { setHeroInView } = useUIStore();
-  
+
   // Easter Egg: Blood Moon
   const [isMidnight, setIsMidnight] = useState(false);
 
@@ -429,8 +429,8 @@ export function HeroSection() {
                 transition: 'color 2s ease'
               }}
             >
-              {isMidnight 
-                ? "A verdadeira sinfonia começa agora." 
+              {isMidnight
+                ? "A verdadeira sinfonia começa agora."
                 : "Mecanismos raros para quem coleciona silêncio e precisão."}
             </motion.p>
 
@@ -648,13 +648,13 @@ export function HeroSection() {
                 onClick={item.action}
                 whileHover={{ y: -3, scale: 1.02, backgroundColor: 'rgba(201,162,75,0.06)' }}
                 whileTap={{ scale: 0.98 }}
-                style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  gap: '0.4rem', 
-                  alignItems: 'center', 
-                  textAlign: 'center', 
-                  flex: '1 1 140px', 
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.4rem',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  flex: '1 1 140px',
                   padding: '1rem',
                   border: '1px solid transparent',
                   borderRadius: '12px',
@@ -668,10 +668,10 @@ export function HeroSection() {
                 <span style={{ fontFamily: 'var(--font-seal)', fontSize: '0.6rem', letterSpacing: '0.25em', color: 'var(--color-brass-gold)', textTransform: 'uppercase', opacity: 0.8 }}>
                   {item.label}
                 </span>
-                <span style={{ 
-                  fontFamily: 'var(--font-body)', 
-                  fontSize: '0.9rem', 
-                  color: 'rgba(231,224,210,0.95)', 
+                <span style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: '0.9rem',
+                  color: 'rgba(231,224,210,0.95)',
                   fontWeight: 500,
                   display: 'flex',
                   alignItems: 'center',
