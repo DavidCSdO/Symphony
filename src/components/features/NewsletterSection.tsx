@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 import { Mail } from 'lucide-react';
@@ -41,7 +42,11 @@ export function NewsletterSection() {
         }}
       />
 
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 30 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         style={{
           maxWidth: '640px',
           margin: '0 auto',
@@ -51,6 +56,16 @@ export function NewsletterSection() {
         }}
       >
         <SectionDivider />
+
+        {/* Selo de Cera Art Déco */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="21" stroke="#C9A24B" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.6" />
+            <circle cx="24" cy="24" r="16" fill="#B3122A" fillOpacity="0.8" stroke="#C9A24B" strokeWidth="1" />
+            <path d="M24 14V34M14 24H34" stroke="#E7E0D2" strokeWidth="1" opacity="0.8" />
+            <circle cx="24" cy="24" r="4" fill="#C9A24B" />
+          </svg>
+        </div>
 
         <p
           style={{
@@ -208,7 +223,7 @@ export function NewsletterSection() {
         >
           SEM SPAM · APENAS SESSÕES QUE IMPORTAM · DESCADASTRAMENTO A QUALQUER MOMENTO
         </p>
-      </div>
+      </motion.div>
     </section>
   );
 }

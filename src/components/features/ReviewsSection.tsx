@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { SectionDivider } from '@/components/ui/SectionDivider';
 
 const reviews = [
@@ -39,10 +42,14 @@ function DecoStar({ filled = true }: { filled?: boolean }) {
   );
 }
 
-function ReviewCard({ review }: { review: typeof reviews[0] }) {
+function ReviewCard({ review, index }: { review: typeof reviews[0]; index: number }) {
   return (
-    <article
+    <motion.article
       id={`review-${review.id}`}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
       style={{
         background: 'var(--color-deep-wine)',
         border: '1px solid rgba(201,162,75,0.2)',
@@ -150,7 +157,7 @@ function ReviewCard({ review }: { review: typeof reviews[0] }) {
           {review.source}, {review.edition}
         </cite>
       </footer>
-    </article>
+    </motion.article>
   );
 }
 
@@ -167,7 +174,13 @@ export function ReviewsSection() {
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
         <SectionDivider />
 
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6 }}
+          style={{ textAlign: 'center', marginBottom: 'var(--space-12)' }}
+        >
           <p
             style={{
               fontFamily: 'var(--font-seal)',
@@ -193,17 +206,18 @@ export function ReviewsSection() {
           >
             Críticas
           </h2>
-        </div>
+        </motion.div>
 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: 'var(--space-6)',
+            width: '100%',
           }}
         >
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+          {reviews.map((review, i) => (
+            <ReviewCard key={review.id} review={review} index={i} />
           ))}
         </div>
       </div>

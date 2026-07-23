@@ -4,6 +4,7 @@ import "./globals.css";
 import { ScrollClock } from "@/components/ui/ScrollClock";
 
 import { AudioProvider } from "@/components/providers/AudioProvider";
+import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
 
 const bodoniModa = Bodoni_Moda({
@@ -53,10 +54,12 @@ export default function RootLayout({
       className={`${bodoniModa.variable} ${manrope.variable} ${spaceMono.variable} ${marcellusSC.variable}`}
     >
       <body>
-        <AudioProvider />
-        <CustomCursor />
-        {children}
-        <ScrollClock />
+        <SmoothScrollProvider>
+          <AudioProvider />
+          <CustomCursor />
+          {children}
+          <ScrollClock />
+        </SmoothScrollProvider>
       </body>
     </html>
   );

@@ -2,12 +2,17 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import { useUIStore } from '@/store/useUIStore';
 import { AmbientParticles } from '@/components/3d/AmbientParticles';
+import { useGSAPScroll } from '@/hooks/useGSAPScroll';
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const emblemRef = useRef<HTMLDivElement>(null);
+  const moonBlockRef = useRef<HTMLDivElement>(null);
   const { setHeroInView } = useUIStore();
 
   /* IntersectionObserver → avisa o Header quando o hero sai da tela */
@@ -24,6 +29,42 @@ export function HeroSection() {
     return () => observer.disconnect();
   }, [setHeroInView]);
 
+  /* GSAP ScrollTrigger Scrub suave sem pinning para evitar quebra de layout */
+  useGSAPScroll((gsap, ScrollTrigger) => {
+    if (!titleRef.current || !emblemRef.current || !sectionRef.current) return;
+
+    const mainTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.8,
+      },
+    });
+
+    // Encolhimento do título + expansão de letter-spacing + rotação do emblema
+    mainTl.to(titleRef.current, {
+      scale: 0.85,
+      opacity: 0.3,
+      y: -50,
+      ease: 'power1.out',
+    }, 0);
+
+    mainTl.to(emblemRef.current, {
+      rotation: 180,
+      scale: 1.15,
+      opacity: 0.5,
+      ease: 'power1.out',
+    }, 0);
+  }, []);
+
+  /* Parallax scroll na imagem do Hero */
+  const { scrollY } = useScroll();
+  const heroImageY = useTransform(scrollY, [0, 800], [0, 150]);
+  const heroImageScale = useTransform(scrollY, [0, 800], [1, 1.08]);
+  const heroContentOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const heroContentY = useTransform(scrollY, [0, 500], [0, -60]);
+
   return (
     <>
       {/* ════════════════════════════════════════════
@@ -37,29 +78,38 @@ export function HeroSection() {
         style={{
           position: 'relative',
           width: '100%',
-          /* A seção ocupa 100vh — a imagem fica como cover dentro dela */
           height: '100svh',
           overflow: 'hidden',
           background: '#0A0A0D',
         }}
       >
-        {/* ── Imagem com objectFit: cover, posicionada no centro da composição ── */}
-        <Image
-          src="/Context/backgrounds/fundohero.png"
-          alt="Skyline de Gotham à meia-noite — Symphony of Night"
-          fill
-          priority
-          sizes="100vw"
+        {/* ── Imagem com Parallax + Zoom Suave no Scroll ── */}
+        <motion.div
           style={{
-            objectFit: 'cover',
-            objectPosition: 'center 40%',
+            position: 'absolute',
+            inset: 0,
+            y: heroImageY,
+            scale: heroImageScale,
+            transformOrigin: 'center center',
           }}
-        />
+        >
+          <Image
+            src="/Context/backgrounds/fundohero.png"
+            alt="Skyline de Gotham à meia-noite — Symphony of Night"
+            fill
+            priority
+            sizes="100vw"
+            style={{
+              objectFit: 'cover',
+              objectPosition: 'center 40%',
+            }}
+          />
+        </motion.div>
 
         {/* ── Three.js Ambient Particles (poeira dourada flutuante) ── */}
         <AmbientParticles />
 
-        {/* ── Overlay em 3 camadas: topo escuro, centro limpo, base escura ── */}
+        {/* ── Overlay em 3 camadas ── */}
         <div
           aria-hidden="true"
           style={{
@@ -80,8 +130,8 @@ export function HeroSection() {
           }}
         />
 
-        {/* ── Layout: logo no topo, CTA na base ── */}
-        <div
+        {/* ── Layout: logo no topo, CTA na base com Fade/Translate no Scroll ── */}
+        <motion.div
           style={{
             position: 'absolute',
             inset: 0,
@@ -91,6 +141,8 @@ export function HeroSection() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: 'clamp(2rem,6vh,4rem) 1.5rem clamp(2rem,5vh,3.5rem)',
+            opacity: heroContentOpacity,
+            y: heroContentY,
           }}
         >
           {/* — TOPO: Wordmark + Emblema — */}
@@ -103,9 +155,10 @@ export function HeroSection() {
             }}
           >
             <h1
+              ref={titleRef}
               style={{
                 fontFamily: 'var(--font-wordmark)',
-                fontSize: 'clamp(2.8rem, 9vw, 7.5rem)',
+                fontSize: 'clamp(6.0rem, 19.5vw, 20rem)',
                 fontWeight: 'normal',
                 color: 'var(--color-veiled-ivory)',
                 lineHeight: 0.9,
@@ -123,6 +176,7 @@ export function HeroSection() {
             </h1>
 
             <div
+              ref={emblemRef}
               style={{
                 filter: 'drop-shadow(0 0 28px rgba(201,162,75,0.65))',
                 animation: 'fadeInDown 0.9s 0.4s cubic-bezier(0.16,1,0.3,1) both',
@@ -164,7 +218,15 @@ export function HeroSection() {
             </p>
 
             <div style={{ animation: 'fadeInUp 0.9s 0.9s cubic-bezier(0.16,1,0.3,1) both' }}>
-              <Button variant="primary" size="lg" id="hero-cta-btn">
+              <Button
+                variant="primary"
+                size="lg"
+                id="hero-cta-btn"
+                onClick={() => {
+                  const target = document.getElementById('elenco');
+                  target?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
                 Ver a sessão de hoje
               </Button>
             </div>
@@ -196,23 +258,21 @@ export function HeroSection() {
               </svg>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ════════════════════════════════════
           CONTINUAÇÃO DA IMAGEM — segundo
-          bloco visual com a parte inferior
-          do skyline (prédios + rua + lua)
+          bloco visual (prédios + lua) com scroll reveal
           ════════════════════════════════════ */}
       <div
+        ref={moonBlockRef}
         style={{
           position: 'relative',
           width: '100%',
-          /* Altura generosa para mostrar a parte inferior da imagem */
-          minHeight: '70vh',
+          minHeight: '65vh',
           backgroundImage: 'url(/Context/backgrounds/fundohero.png)',
           backgroundSize: 'cover',
-          /* Mostra a parte de baixo da imagem (onde estão os prédios e a rua) */
           backgroundPosition: 'center 75%',
           backgroundRepeat: 'no-repeat',
           overflow: 'hidden',
@@ -244,8 +304,12 @@ export function HeroSection() {
           }}
         />
 
-        {/* Texto centralizado sobre a continuação da imagem */}
-        <div
+        {/* Bloco Poético de Manifesto sobre a Lua com Scroll Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: 'absolute',
             inset: 0,
@@ -253,7 +317,7 @@ export function HeroSection() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '1.5rem',
+            gap: '1.25rem',
             padding: '4rem 1.5rem',
             zIndex: 2,
           }}
@@ -262,78 +326,54 @@ export function HeroSection() {
             style={{
               fontFamily: 'var(--font-seal)',
               fontSize: '0.65rem',
-              letterSpacing: '0.25em',
+              letterSpacing: '0.3em',
               color: 'var(--color-brass-gold)',
               textTransform: 'uppercase',
-              opacity: 0.8,
+              opacity: 0.85,
             }}
           >
             Ateliê Sanchez · Est. 2020
           </span>
 
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+              fontStyle: 'italic',
+              color: 'var(--color-veiled-ivory)',
+              textAlign: 'center',
+              maxWidth: '650px',
+              lineHeight: 1.3,
+              margin: 0,
+              textShadow: '0 2px 30px rgba(10,10,13,0.95)',
+            }}
+          >
+            “O tempo não se mede em horas, mas no ritmo dos mecanismos.”
+          </h2>
+
           <p
             style={{
               fontFamily: 'var(--font-body)',
               fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
-              color: 'rgba(231,224,210,0.7)',
+              color: 'rgba(231,224,210,0.75)',
               textAlign: 'center',
-              maxWidth: '500px',
+              maxWidth: '540px',
               lineHeight: 1.8,
-              textShadow: '0 1px 20px rgba(10,10,13,0.8)',
+              textShadow: '0 1px 20px rgba(10,10,13,0.9)',
             }}
           >
             Peças autorais em edição limitada — relógios, autômatos e objetos
-            cinéticos, feitos à mão no Ateliê Sanchez.
+            cinéticos, feitos à mão com latão, madeira nobre e cristal.
           </p>
-
-          {/* Quatro diferenciais */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              gap: '0 3rem',
-              marginTop: '0.5rem',
-            }}
-          >
-            {[
-              { label: '100 unidades', sub: 'por peça' },
-              { label: 'Feito à mão', sub: 'artesanato puro' },
-              { label: 'Latão & Cristal', sub: 'materiais nobres' },
-              { label: 'Numerado', sub: 'certificado de origem' },
-            ].map((item) => (
-              <div
-                key={item.label}
-                style={{ textAlign: 'center', minWidth: '120px' }}
-              >
-                <p style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  color: 'var(--color-brass-gold)',
-                  letterSpacing: '0.05em',
-                  marginBottom: '0.15rem',
-                }}>
-                  {item.label}
-                </p>
-                <p style={{
-                  fontFamily: 'var(--font-seal)',
-                  fontSize: '0.55rem',
-                  letterSpacing: '0.15em',
-                  color: 'rgba(231,224,210,0.45)',
-                  textTransform: 'uppercase',
-                }}>
-                  {item.sub}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Faixa de transição — conecta ao restante da página */}
-      <div
+      {/* Faixa de transição — conecta ao restante da página com animação no scroll */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.6 }}
         style={{
           background: 'var(--color-gotham-black)',
           borderTop: '1px solid rgba(201,162,75,0.15)',
@@ -358,8 +398,12 @@ export function HeroSection() {
             { label: 'Materiais', value: 'Latão · Madeira · Cristal' },
             { label: 'Envio', value: 'Embalagem exclusiva lacrada' },
           ].map((item, i) => (
-            <div
+            <motion.div
               key={item.label}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
               style={{
                 display: 'flex', flexDirection: 'column',
                 gap: '0.3rem', alignItems: 'center', textAlign: 'center',
@@ -387,10 +431,10 @@ export function HeroSection() {
               }}>
                 {item.value}
               </span>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <style>{`
         @keyframes fadeInDown {

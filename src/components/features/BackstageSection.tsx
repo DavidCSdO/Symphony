@@ -1,5 +1,8 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
-import { SectionDivider } from '@/components/ui/SectionDivider';
+import { SketchfabViewer } from '@/components/3d/SketchfabViewer';
 
 export function BackstageSection() {
   return (
@@ -22,8 +25,13 @@ export function BackstageSection() {
         }}
         className="backstage-grid"
       >
-        {/* Texto */}
-        <div>
+        {/* Texto com Scroll Reveal */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        >
           <p
             style={{
               fontFamily: 'var(--font-seal)',
@@ -133,73 +141,24 @@ export function BackstageSection() {
             ))}
           </div>
 
-          <Button variant="ghost" size="md" id="backstage-process-btn">
+          <Button variant="ghost" size="md" id="backstage-process-btn" href="/bastidores">
             Conhecer o processo
           </Button>
-        </div>
+        </motion.div>
 
-        {/* Painel visual — padrão déco */}
-        <div
-          style={{
-            position: 'relative',
-            aspectRatio: '4/5',
-            background: 'linear-gradient(145deg, #1C0E14 0%, #0A0A0D 60%, #2E1A3D 100%)',
-            border: '1px solid rgba(201,162,75,0.2)',
-            borderRadius: 'var(--radius-lg)',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+        {/* Visualizador 3D Sketchfab Interativo */}
+        <motion.div
+          initial={{ opacity: 0, x: 40, scale: 0.95 }}
+          whileInView={{ opacity: 1, x: 0, scale: 1 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          {/* Padrão geométrico déco */}
-          <svg width="260" height="320" viewBox="0 0 260 320" fill="none" opacity="0.35">
-            {/* Moldura externa */}
-            <rect x="10" y="10" width="240" height="300" stroke="#C9A24B" strokeWidth="0.75" />
-            <rect x="20" y="20" width="220" height="280" stroke="#C9A24B" strokeWidth="0.5" />
-            {/* Centro */}
-            <circle cx="130" cy="160" r="70" stroke="#C9A24B" strokeWidth="0.75" />
-            <circle cx="130" cy="160" r="50" stroke="#C9A24B" strokeWidth="0.5" />
-            {/* Raios */}
-            {Array.from({ length: 12 }).map((_, i) => {
-              const a = (i * 30 * Math.PI) / 180;
-              return (
-                <line key={i}
-                  x1={130 + Math.sin(a) * 50} y1={160 - Math.cos(a) * 50}
-                  x2={130 + Math.sin(a) * 70} y2={160 - Math.cos(a) * 70}
-                  stroke="#C9A24B" strokeWidth={i % 3 === 0 ? 1 : 0.5}
-                />
-              );
-            })}
-            {/* Cantos déco */}
-            {[
-              [10, 10], [250, 10], [10, 310], [250, 310],
-            ].map(([cx, cy], i) => (
-              <circle key={i} cx={cx} cy={cy} r="4" fill="#C9A24B" fillOpacity="0.6" />
-            ))}
-            <circle cx="130" cy="160" r="10" fill="#C9A24B" fillOpacity="0.2" />
-            <circle cx="130" cy="160" r="3" fill="#C9A24B" />
-          </svg>
-
-          {/* Overlay de texto */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              textAlign: 'center',
-            }}
-          >
-            <p style={{ fontFamily: 'var(--font-seal)', fontSize: '0.6rem', letterSpacing: '0.2em', color: 'var(--color-brass-gold)', opacity: 0.7 }}>
-              ATELIÊ SANCHEZ · EST. 2020
-            </p>
-          </div>
-        </div>
+          <SketchfabViewer />
+        </motion.div>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .backstage-grid {
             grid-template-columns: 1fr !important;
           }

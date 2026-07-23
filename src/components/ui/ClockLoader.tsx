@@ -11,7 +11,8 @@ export function ClockLoader() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isLoaderVisible) return;
+    // Garante que o loader seja ativado ao carregar/recarregar a página
+    setLoaderVisible(true);
 
     const timer = setTimeout(() => {
       if (containerRef.current) {
@@ -19,10 +20,10 @@ export function ClockLoader() {
         containerRef.current.style.pointerEvents = 'none';
         setTimeout(() => setLoaderVisible(false), 700);
       }
-    }, 2400);
+    }, 2200);
 
     return () => clearTimeout(timer);
-  }, [isLoaderVisible, setLoaderVisible]);
+  }, [setLoaderVisible]);
 
   if (!isLoaderVisible) return null;
 
@@ -81,17 +82,22 @@ export function ClockLoader() {
           const angle = (i * 30 * Math.PI) / 180;
           const outerR = 50;
           const innerR = i % 3 === 0 ? 44 : 47;
+          const x1 = +(60 + Math.sin(angle) * innerR).toFixed(4);
+          const y1 = +(60 - Math.cos(angle) * innerR).toFixed(4);
+          const x2 = +(60 + Math.sin(angle) * outerR).toFixed(4);
+          const y2 = +(60 - Math.cos(angle) * outerR).toFixed(4);
+          const delay = (0.8 + i * 0.05).toFixed(2);
           return (
             <line
               key={i}
-              x1={60 + Math.sin(angle) * innerR}
-              y1={60 - Math.cos(angle) * outerR}
-              x2={60 + Math.sin(angle) * outerR}
-              y2={60 - Math.cos(angle) * outerR}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
               stroke="#C9A24B"
               strokeWidth={i % 3 === 0 ? 1.5 : 0.75}
               strokeOpacity="0.6"
-              style={{ animation: `fadeIn 0.3s ${0.8 + i * 0.05}s ease both` }}
+              style={{ animation: `fadeIn 0.3s ${delay}s ease both` }}
             />
           );
         })}

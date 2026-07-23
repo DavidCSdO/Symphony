@@ -2,18 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Search, User, ShoppingBag, Menu, X, Music } from 'lucide-react';
 import { useCartStore } from '@/store/useCartStore';
 import { useUIStore } from '@/store/useUIStore';
 
 const navLinks = [
-  { href: '/colecao', label: 'Coleção' },
-  { href: '/atelie', label: 'Ateliê Sanchez' },
+  { href: '/colecao/automatos', label: 'Coleção' },
+  { href: '/bastidores', label: 'Ateliê Sanchez' },
   { href: '/editorial', label: 'Editorial' },
   { href: '/clube', label: 'Clube' },
 ];
 
 export function Header() {
+  const pathname = usePathname();
   const {
     isHeaderSolid,
     setHeaderSolid,
@@ -32,21 +34,19 @@ export function Header() {
     setCartCount(totalItems());
   }, [totalItems]);
 
-  // Solidifica fundo ao rolar (só relevante depois que o header apareceu)
   useEffect(() => {
     const handleScroll = () => setHeaderSolid(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setHeaderSolid]);
 
-  // Bloqueia scroll do body quando menu mobile aberto
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
-  // Quando hero está em view → header invisível e fora do fluxo de interação
-  const headerVisible = !isHeroInView;
+  const isHomePage = pathname === '/home' || pathname === '/';
+  const headerVisible = isHomePage ? !isHeroInView : true;
 
   return (
     <>

@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 
 type Variant = 'primary' | 'ghost' | 'gold';
 type Size = 'sm' | 'md' | 'lg';
@@ -10,6 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: Size;
   children: React.ReactNode;
   asChild?: boolean;
+  href?: string;
 }
 
 const styles: Record<string, React.CSSProperties> = {
@@ -29,6 +31,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'relative',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    textDecoration: 'none',
   },
 };
 
@@ -61,6 +64,7 @@ export function Button({
   size = 'md',
   children,
   style,
+  href,
   ...props
 }: ButtonProps) {
   const [hovered, setHovered] = React.useState(false);
@@ -71,7 +75,7 @@ export function Button({
     gold: { background: 'var(--color-brass-gold)', color: 'var(--color-gotham-black)' },
   };
 
-  return (
+  const buttonElement = (
     <button
       style={{
         ...styles.base,
@@ -87,4 +91,14 @@ export function Button({
       {children}
     </button>
   );
+
+  if (href) {
+    return (
+      <Link href={href} style={{ textDecoration: 'none', display: 'inline-block' }}>
+        {buttonElement}
+      </Link>
+    );
+  }
+
+  return buttonElement;
 }

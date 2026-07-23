@@ -14,25 +14,25 @@ const columns = [
   {
     title: 'Ateliê',
     links: [
-      { href: '/atelie', label: 'Sobre o Sanchez' },
-      { href: '/atelie/materiais', label: 'Materiais & Processo' },
-      { href: '/atelie/sustentabilidade', label: 'Sustentabilidade' },
+      { href: '/bastidores', label: 'Sobre o Sanchez' },
+      { href: '/bastidores', label: 'Materiais & Processo' },
+      { href: '/reserva', label: 'Agendamento Privado' },
     ],
   },
   {
     title: 'Atendimento',
     links: [
-      { href: '/rastrear', label: 'Rastrear pedido' },
-      { href: '/trocas', label: 'Trocas & Garantia' },
-      { href: '/contato', label: 'Fale com a bilheteria' },
+      { href: '/reserva', label: 'Reserva de Peça' },
+      { href: '/clube', label: 'Clube Symphony' },
+      { href: '/reserva', label: 'Fale com o Ateliê' },
     ],
   },
   {
     title: 'Clube',
     links: [
       { href: '/clube', label: 'Clube Symphony' },
-      { href: '/editorial', label: 'Editorial' },
-      { href: '/clube/beneficios', label: 'Benefícios' },
+      { href: '/editorial', label: 'Editorial de Horologia' },
+      { href: '/reserva', label: 'Benefícios VIP' },
     ],
   },
 ];
